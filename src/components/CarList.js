@@ -4,41 +4,29 @@ import useAsync from '../customHook/useAsync';
 import { Link } from 'react-router-dom';
 
 //전달할 함수
-async function getCars(){
-    const response = await axios.get("http://localhost:8081/cars");
+async function getCars(id){
+    const response = await axios.get("http://localhost:8081/cars/"+id);
     return response.data;
 }
-function CarList() {
+function CarList({id}) {
     //{loadgin:false, data: null, error: null}
-    const state = useAsync(getCars);
+    const [state] = useAsync(getCars,id);
     const { loading, data, error} = state;
     if(loading) return <div>로딩중...</div>;
     if(error) return <div>에러가 발생했습니다.</div>;
     if(!data) return null;
     return ( 
         <div>
-            <table className='table'>
-                <thead>
-                    <tr>
-                        <th>이미지</th>
-                        <th>브랜드</th>
-                        <th>모델</th>
-                        <th>색상</th>
-                        <th>가격</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((car,index)=>
-                        <tr key={index}>
-                            <td><img src={"http://localhost:8081/image?image="+car.imgName} width="200" /></td>
-                            <td>{car.brand}</td>
-                            <td><Link to={"/carDetail/"+car.id}>{car.model}</Link></td>
-                            <td>{car.color}</td>
-                            <td>{car.price}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+            {data.map((car,index)=>
+                <div key={index} className="card" style={{width: "18rem"}}>
+                    <img src={"http://localhost:8081/image?image="+car.imgName} className="card-img-top" alt="..." />
+                    <div className="card-body">
+                        <h5 className="card-title">{car.title}</h5>
+                        <p className="card-text"></p>
+                        <Link to={"/carDetail/"+car.id}>{car.price}만원</Link>
+                    </div>
+                </div>
+            )}     
         </div>
      );
 }

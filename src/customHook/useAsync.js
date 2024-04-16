@@ -34,7 +34,7 @@ function reducer(state,action){
             return state;
     }
 }
-function useAsync(callback){
+function useAsync(callback,id=0){
     const [state, dispatch] = useReducer(reducer,initialState);
     //데이터 요청
     //디폴트 매개변수 fetchDate(값)---> 없으면 ({category:1,maker:1})
@@ -53,8 +53,24 @@ function useAsync(callback){
             dispatch({ type:"ERROR", error: e})
         }
     }
+    async function fetchData2(){
+        //loading의 value를 true로 상태 업데이트
+        dispatch({ type:"LOADING"});
+        try{
+            const data = await callback(id);
+            dispatch({ type:"SUCCESS", data: data})
+        }
+        catch(e){
+            dispatch({ type:"ERROR", error: e})
+        }
+    }
     useEffect(()=>{
-        fetchData();
+        if(id===0){
+            fetchData();
+        }else {
+            fetchData2();
+        }
+       
     },[])
     return [state,fetchData];
 }

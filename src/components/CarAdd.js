@@ -11,9 +11,9 @@ async function getCategory(id,maker){
 }
 function CarAdd() {
      //1)카테고리 선택, 메이커선택 값을 관리 
-     const [ cate, setCate] = useState({
+     const [cate, setCate] = useState({
         category:1,
-        maker:1
+        maker:1,
     });
 
     const [cateState,refetch] = useAsync(getCategory);
@@ -23,7 +23,7 @@ function CarAdd() {
    
     const [formData,setFormData]  = useState({
         title:"", 
-        cardesc:"",
+        carDesc:"",
         color:"", 
         registerNumber:"",
         year:"",
@@ -31,8 +31,9 @@ function CarAdd() {
         dealerId:"1",
         displacement:"",
         mileage:"",
-        transmission: "",
-        fuel:""
+        transmission: "자동",
+        fuel:"전기",
+        modelId:"1"
     })
     const carformData = new FormData();
     //파일업로시 동작 
@@ -57,7 +58,7 @@ function CarAdd() {
     const onReset = () => {
         setFormData({
             title:"", 
-            cardesc:"",
+            carDesc:"",
             color:"", 
             registerNumber:"",
             year:"",
@@ -66,7 +67,8 @@ function CarAdd() {
             displacement:"",
             mileage:"",
             transmission: "",
-            fuel:""
+            fuel:"",
+            modelId:""
         })
     }
     //2)카테고리, 메이커 선택 변경했을때 실행 
@@ -80,7 +82,7 @@ function CarAdd() {
             ({
             ...state,
             [name]:value,
-            maker: name!="category" ? value : value==2 ? 6 : 1 
+            maker: name!=="category" ? value : value===2 ? 6 : 1 
             })
         );  
     }
@@ -89,22 +91,25 @@ function CarAdd() {
         //전송요청이벤트 제거 
         e.preventDefault();
         //입력이 다 되었는지 체크후 함수호출
-        if(formData.brand && formData.model 
-            && formData.color && formData.year
-            && formData.price && formData.registerNumber
-        ){
-            memberJoin();
-        }
+        memberJoin();
+        
     }
     async function memberJoin(){
         //carformData.append("CarAddDto", new Blob([JSON.stringify(formData)], { type: "multipart/form-data" }));
-        carformData.append("brand",formData.brand);
-        carformData.append("model",formData.model);
+        carformData.append("displacement",formData.displacement);
+        carformData.append("mileage",formData.mileage);
         carformData.append("color",formData.color);
         carformData.append("registerNumber",formData.registerNumber);
         carformData.append("year",formData.year);
         carformData.append("price",formData.price);
+        carformData.append("transmission",formData.transmission);
+        carformData.append("fuel",formData.fuel);
         carformData.append("dealerId",1);
+        carformData.append("carDesc",formData.carDesc);
+        carformData.append("title",formData.title);
+        carformData.append("categoryId",cate.category);
+        carformData.append("makerId",cate.maker);
+        carformData.append("modelId",formData.modelId);
         try{
             const response = await axios.post(
                 "http://localhost:8081/addCar",carformData, {
@@ -153,8 +158,9 @@ function CarAdd() {
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="model" className="form-label">모델</label>
-                    <select name="model" id="model" className="form-control" >
+                    <label for="modelId" className="form-label">모델</label>
+                    <select name="modelId" id="modelId" className="form-control" value={formData.modelId} 
+                    onChange={onChange}>
                         {data.models.map(li=>(
                             <option value={li.id} key={li.id}>{li.modelName}</option>
                         ))}
@@ -163,7 +169,7 @@ function CarAdd() {
                 <div class="mb-3">
                     <label for="title" className="form-label">제목</label>
                     <input type="text" 
-                    name="brand"
+                    name="title"
                     value={formData.title} 
                     onChange={onChange} className="form-control" 
                     id="title" aria-describedby="titleHelp" 
@@ -227,10 +233,10 @@ function CarAdd() {
                 <div class="mb-3">
                     <label for="mileage" className="form-label">변속기</label>
                     <select  
-                    name="mileage"
-                    value={formData.mileage} 
+                    name="transmission"
+                    value={formData.transmission} 
                     onChange={onChange} className="form-control" 
-                    id="mileage" aria-describedby="mileageHelp" 
+                    id="transmission" aria-describedby="mileageHelp" 
                     >
                     <option value="자동">자동</option>
                     <option value="수동">수동</option> 
@@ -255,10 +261,10 @@ function CarAdd() {
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="cardesc" className="form-label">설명글</label>
+                    <label for="carDesc" className="form-label">설명글</label>
                     <textarea type="text" 
-                    name="cardesc"
-                    value={formData.cardesc} 
+                    name="carDesc"
+                    value={formData.carDesc} 
                     onChange={onChange} className="form-control" 
                     id="cardesc"  
                     ></textarea>

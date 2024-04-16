@@ -7,6 +7,7 @@ import { useState } from 'react';
 import Join from './components/Join';
 import CarAdd from './components/CarAdd';
 import CarDetail from './components/CarDetail';
+import Main from './components/Main';
 
 function App() {
   //로그인 한상태인지 상태관리
@@ -16,7 +17,7 @@ function App() {
       <Header isAuthenticated={isAuthenticated} setAuth={setAuth}/>
       <div className='container'>
       <Routes>
-        <Route path='/' element={<CarList/>}/>
+        <Route path='/' element={<Main/>}/>
         <Route path='/login' element={<Login setAuth={setAuth}/>} />
         <Route path="/join" element={<Join/>} />
         <Route path='/addCar' element={<CarAdd/>} />

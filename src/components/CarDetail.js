@@ -11,7 +11,8 @@ async function getCar(id){
 
 function CarDetail() {
     const { carId } = useParams() 
-    const { loading, data, error }  = useAsync(getCar,carId);
+    const [state]  = useAsync(getCar,carId);
+    const { loading, data, error } = state;
     if(loading) return <div>로딩중....</div>;
     if(error) return <div>에러가 발생했습니다.</div>;
     if(!data) return null;
