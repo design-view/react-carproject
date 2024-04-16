@@ -1,0 +1,21 @@
+.App {
+  text-align: center;
+}
+.container {
+  text-align: left;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 0;
+}
+.btn {
+  margin: 10px 3px;
+}
+li a {
+  color: #222;
+  text-decoration: none;
+  padding: 10px;
+}
+.d-flex{
+  align-items: center;
+}
